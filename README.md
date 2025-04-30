@@ -28,3 +28,26 @@ webpack将ts编译打包成js,和nodejs的fs模块息息相关。
 
 
 
+不需要服务器？
+支持客户端渲染（CSR）、单页应用（SPA）和静态站点生成（SSG）。这些应用可以部署到 CDN 或静态托管服务（无需服务器）。
+
+
+1.//支持全栈react：可以 将 Next.js 应用部署 到任何支持 Node.js 或 Docker 容器
+npx create-next-app@latest
+
+
+2.//全栈：路由库+vite
+强调标准的 Web API 并提供了多个 可部署的模板 适用于各种 JavaScript 运行时和平台。
+npx create-react-router@latest
+
+3.//使用Expo库，支持真正原生 UI 的通用 Android、iOS 和 Web 应用
+npx create-expo-app@latest
+
+
+
+vite:
+有丰富的插件生态系统，能够支持快速热更新、JSX、Babel/SWC 等常见功能
+
+
+======
+npm create vite@latest my-react-app -- --template react
