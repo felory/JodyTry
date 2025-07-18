@@ -75,6 +75,9 @@ div冒泡到root，发送到合成事件层（实例化成统一的react event�
         </>
     )
 ref绑定到【组件】，可以拿到组件实例。
+const myToolRef = createrRef();
+<MyTool ref={myToolRef}></MyTool> 需要MyTool是类组件，才能拿到实例。
+如果 MyTool 是函数组件，需要用 React.forwardRef 包裹它
 
 (2)state 组件内部的私有数据对象。state变化，react会自动重新渲染，而不用操作DOM==>自动响应。
 

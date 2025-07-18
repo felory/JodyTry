@@ -1,11 +1,11 @@
-import React, {createRef, createState, useState} from 'react'; //加了这一行，在低版本react15中，返回值才会被Babel转换成React.CreateElement。
+import React, {createRef, createState, useRef, useState} from 'react'; //加了这一行，在低版本react15中，返回值才会被Babel转换成React.CreateElement。
 import MyTool from './MyTool';
 
 
 function BasicPage() {
     ////////////bind to DOM or CompInstance
     const inputBoxRef = createRef(); //bind to DOM
-    const myToolRef = createRef();  //bind to CompInstance
+    const myToolRef = useRef();  //bind to CompInstance
     function onLogNow() {
         console.log("inputBoxRef current => focus on .value", inputBoxRef.current);
         console.log("myToolRef current:", myToolRef.current);
