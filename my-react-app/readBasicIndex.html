@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>React</title>
+        <!--1.核心包，不提供DOM操作的功能-->
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <!--2.支持操作DOM-->
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <link rel="stylesheet" href="readBasicIndex.css">
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/babel">
+            const msg = "hello world!";
+    
+            const rootEle = ReactDOM.createRoot(document.querySelector('#root'));
+            rootEle.render(msg);
+
+            const text1 = "<p>will prevent XSS attack</p>";
+           
+            //创建虚拟DOM
+            const vDom1 = React.createElement("p",{title:"phase",}, text1);//设置子节点文本mmText
+            rootEle.render(vDom1);
+            
+            /** JSX本质是React.createElement(compoenent, props, children)函数的语法糖，
+            * 使用Babel编译后，JSX会变成虚拟DOM */
+            //需要babel转码，必须指定<script type="text/babel">不然不识别这个语法。
+            const vDom2 = <h1 className="mypp0">wirte html in js directly.</h1>;
+            rootEle.render(vDom2);
+            
+            //语法！！！
+            /**jsx里面, 用大括号放{变量}，不要加双引号*/
+            const vDom3 = (<h1>{msg}</h1>);
+            rootEle.render(vDom3);
+
+            //类名<p className="mypp0">
+            //jsx的html里写js必须用 大括号包裹 有返回值的。
+            // 所以注释用 {/*comment*/}， 而//comment , /*comment*/不正确。
+            const vDom4 = <p className={'mypp1 mypp0'}> hello {/*comment here*/}</p>
+            const vDom5= <div>{1>0? 'haa':'nope'}</div>;
+            //用map 遍历对象和数，注意用大括号{包裹遍历代码}。
+            //！！！遍历最好绑定唯一key值，方便虚拟DOM发生位置改变时，diff算法识别更快。
+            const usr = {name:'wx',age:10, class: 4};
+            const vUserDom = (
+                <ul>
+                    {
+                        Object.keys(usr).map((k,index)=>{
+                        return (<li key={k+index}>{k} is {usr[k]}</li>)})
+                    }
+                </ul>
+            )
+            rootEle.render(vUserDom);
+
+            function functionName1(){
+                return 'fn';
+            }
+
+            let count = 0, arr= [12,3];
+            //大部分对象 比如new的，结构复杂, 无法直接嵌入JSX
+            {new Date()}//no
+            {()=>{}}
+            {functionName1}
+            //赋值语句，可以直接嵌套进JSX
+            {count+=10}
+            //数组（孩子不是对象的）可以直接嵌套进JSX
+            {arr}
+            
+            const vListDom = (
+                    <ul>
+                        {
+                            Array(10).fill(null,2).map((k, index) => {
+                                return (<li key={k + index}>{k}</li>)
+                            })
+                        }
+                    </ul>
+                )
+            rootEle.render(vListDom);
+
+            //React会默认对JSX进行编码，对html代码进行实体转义，这样可以有效避免xss攻击。
+            let ctnWithJs1 = '<script>console.log("with script")<\/script>';
+            const vDom11 = <div>{ctnWithJs1}</div>; //no script ran
+            //使用innerHTML 不进行转义
+            let ctnWithJs2 = {__html: ctnWithJs1 };
+            const vDom12 = (<div dangerouslySetInnerHTML={ctnWithJs2}>hi</div>);
+            rootEle.render(vDom11);
+            rootEle.render(vDom12);
+            
+
+        </script>
+
+        <style>
+            .mypp0{
+                color: pink;
+            }
+        </style>
+    </body>
+</html>

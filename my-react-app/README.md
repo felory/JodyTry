@@ -36,5 +36,10 @@ import {Home} from 'home.js'
 ## 〈section〉是小写的，所以react知道这是 HTML 标签。
 
 
-## jsx常与react一起使用，但也可以单独使用。
+# jsx常与react一起使用，但也可以单独使用。
 JSX 是一种语法扩展，而 React 则是一个 JavaScript 的库。
+## jsx必须return 一个根元素，可以是空标签<></>包裹（这叫一个Fragment，用于分组，但不额外添加节点）。
+## JSX 要求标签必须正确闭合。像 <img> 这样的自闭合标签必须书写成 <img />
+## 大部分属性 是以 驼峰式 命名的。 <img clasName="" src=""/>
+
+
