@@ -1,6 +1,5 @@
 import { createRef, useState } from 'react';
-import './App.css';
-import GlobalContext from './globalContext';
+import GlobalContext from '../globalContext';
 
 function Home() {
 

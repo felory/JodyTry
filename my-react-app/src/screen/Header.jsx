@@ -1,7 +1,7 @@
-import GlobalContext from "./globalContext";
+import GlobalContext from "../globalContext";
+import AlertBtn from "../components/AlertBtn";
 
-
-export function Header() {
+export default function Header() {
     
 /**
  * 使用组件<GlobalContext.Consumer定义消费范围
@@ -11,10 +11,12 @@ export function Header() {
         <GlobalContext.Consumer>
             { 
                 (context) => {
-                    return (
+                    return (<>
                         <button onClick={() => { }}>
-                            num coming from Root: {context.num}
+                            {/* num coming from Root: {context.num} */}
                         </button>
+                        <AlertBtn></AlertBtn>
+                    </>
 
                     )
                 }

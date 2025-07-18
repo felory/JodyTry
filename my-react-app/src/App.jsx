@@ -2,7 +2,10 @@ import { useState, createRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg';
 import './App.css';
-import Home from './Home';
+import Home from './screen/Home';
+import BasicPage from './screen/BasicPage';
+import Header from './screen/Header';
+import Footer from './screen/Footer';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +27,14 @@ function App() {
 
   return (
     <>
+      
+      <Header></Header>
+      <BasicPage></BasicPage>
+      {/* <Home ref={homeCompInstanceRef} msg={msg}></Home> */}
+      <Footer></Footer>
+      
+      
+      <h1>Vite + React</h1>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -32,10 +43,8 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
 
       <input type="text" ref={inputeEle} onChange={onInputChange()}/>
-      <Home ref={homeCompInstanceRef} msg={ msg }></Home>
 
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
