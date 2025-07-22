@@ -63,14 +63,19 @@ startTransition(() => { setFilter(input); }); // 延迟更新搜索过滤
 div冒泡到root，发送到合成事件层（实例化成统一的react event），从映射表里找到事件处理函数，分派给它。
 当一个组件挂载/卸载，相应的事件处理函数会在映射表中 添加/删除。
 ================================
-# 三大属性监听数据变化 ref, state, props 
+# 三大属性监听数据变化 ref(与渲染无关，持久化存储), state（触发重新渲染的状态）, props 
 (1)ref绑定到【DOM节点】，ref.current可以拿DOM元素对象。
- const inputTxt = createRef();
+///////需要直接访问或操作DOM节点（如聚焦输入框、测量元素尺寸），但操作本身不应触发重新渲染
+ const inputRef = createRef();
+
+ useEffect(() => {
+    inputRef.current.focus(); // 组件挂载后聚焦
+  }, []);
 
     return (<>
         <h6>Hello~ This is function comp.</h6> 
-        <input type="text" ref={inputTxt} onChange={() => {
-            console.log("onInputChange=>:", inputTxt.current?.value);
+        <input type="text" ref={inputRef} onChange={() => {
+            console.log("onInputChange=>:", inputRef.current?.value);
         }}/>
         </>
     )

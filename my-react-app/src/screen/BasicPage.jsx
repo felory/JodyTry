@@ -1,9 +1,10 @@
-import React, {createRef, createState, useRef, useState} from 'react'; //加了这一行，在低版本react15中，返回值才会被Babel转换成React.CreateElement。
+import React, {createRef, createState, useRef, useState, useEffect} from 'react'; //加了这一行，在低版本react15中，返回值才会被Babel转换成React.CreateElement。
 import MyTool from './MyTool';
+import TodoList from '../components/todolist/TodoList';
 
 
 function BasicPage() {
-    ////////////bind to DOM or CompInstance
+    ////////////(1)ref bind to DOM or CompInstance
     const inputBoxRef = createRef(); //bind to DOM
     const myToolRef = useRef();  //bind to CompInstance
     function onLogNow() {
@@ -11,7 +12,11 @@ function BasicPage() {
         console.log("myToolRef current:", myToolRef.current);
     }
 
-    ////////////state
+    useEffect(() => {
+        inputBoxRef.current.focus(); // 组件挂载后聚焦
+    }, []);
+
+    ////////////(2)state
     const pwdState1 = {
         type: 'text',
         tips: 'hide password',
@@ -30,7 +35,7 @@ function BasicPage() {
     }
 
    
-    ///////////props
+    ///////////(3)props
     //props are passed from parent to child, so no need to define here.
 
     return (<>
@@ -42,6 +47,8 @@ function BasicPage() {
             console.log("onInputChange=>:", inputBoxRef.current?.value);
         }} />
         <MyTool ref={myToolRef}></MyTool>
+
+        <TodoList></TodoList>
 
         <input type={pwdState.type} />
         <button onClick={onToggleDisplayPwd}>{pwdState.tips}</button>
