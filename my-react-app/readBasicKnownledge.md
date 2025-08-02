@@ -85,12 +85,96 @@ const myToolRef = createrRef();
 如果 MyTool 是函数组件，需要用 React.forwardRef 包裹它
 
 (2)state 组件内部的私有数据对象。state变化，react会自动重新渲染，而不用操作DOM==>自动响应。
+//直接修好原数组，引用未变，不会重新渲染。
+//​​每次更新对象时，都像对待冰雕——不能直接修改，只能复制后重塑
 
+(3)props 是组件传参，是只读的！
+<TodoList msg={msg}></TodoList>
+export default function TodoList({ msg }) { }
 
+====================== 
+# Hook: 以 use 开头的函数。//只能在组件或自定义 Hook 的最顶层调用
+Hook 是特殊的函数，只在 React 渲染时有效。
+const [val, setVal] = useState(initVal);
+// 1.组件进行第一次渲染。 因为你将 initVal 作为 index 的初始值传递给 useState，它将返回 [0, setVal]。 React 记住initVal 是最新的 state 值。
+// 2.调用 setVal(val + 1)。 val 是 0，所以它是 setIndex(1)。这告诉 React 现在记住 val 是 1 并触发下一次渲染。
+// 3.组件进行第二次渲染。React 仍然看到 useState(0)，但是因为 React 记住 了你将 index 设置为了 1，它将返回 [1, setVal]。
+====================== 
+对 React 来说重要的是组件在 UI 树中的位置,而不是在 JSX 中的位置。
+相同位置的相同组件会使得 state 被保留下来
+{isFancy ? (
+        <Counter isFancy={true} /> 
+      ) : (
+        <Counter isFancy={false} /> 
+      )}
+同一个位置，会保留原来的state
+类似 <Counter isFancy={isFancy} /> 
 
+====> 加上key(不是全局唯一，而是父组件内部的顺序)，即使在UI树的同一位置，也不是同一个组件，不会共享state。
+<Counter key="k1" isFancy={isFancy} /> 
 
+============= 
+被移除的组件，如何保留state？
+1.css hide(大量DOM会使得性能变差)。
+2.状态提升到父组件。
+3.保存到localStorage。
+====================================================
+====================================================
+集中 事件处理程序 到reducer。“减少” 组件内的代码量。
 
-============
+将useState迁移到useReducer steps:
+(1).将设置状态的逻辑 修改 成 dispatch 的一个 action对象； ==> 不直接setState而是发出一个action表明发生了什么：
+////handleAddTask(text){
+dispatch({    // ==> action对象
+    type: 'added',
+    id: nextId++,
+    text: text,
+  });}; 
+handleEditTask(text); handleDeleteTask(text); 留下事件处理函数。
+(2).编写 一个 reducer 函数； ////放状态逻辑，接受两个参数：当前状态state + action；返回下一个状态。
+`
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case 'added': {
+      return [
+        ...tasks,
+        {
+          id: action.id,
+          text: action.text,
+          done: false,
+        },
+      ];
+    }
+    case 'changed': {
+      return tasks.map((t) => {
+        if (t.id === action.task.id) {
+          return action.task;
+        } else {
+          return t;
+        }
+      });
+    }
+    case 'deleted': {
+      return tasks.filter((t) => t.id !== action.id);
+    }
+    default: {
+      throw Error('未知 action: ' + action.type);
+    }
+  }
+}
+`
+
+(3).在你的组件中 使用 reducer。
+import { useReducer } from 'react';
+////删除 const [tasks, setTasks] = useState(initialTasks);
+const [tasks, dispatch] = useReducer(tasksReducerFn, initialTasks);
+function handleAddTask(text) {
+    dispatch({
+      type: 'added',
+      id: nextId++,
+      text: text,
+    });
+  }
 
 
 # 6大特点： 

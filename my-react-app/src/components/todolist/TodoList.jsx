@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import './todolist.css'
 
-export default function TodoList() {
+export default function TodoList({ msg }) {
   const newTaskTextRef = useRef('');
 
   const initState = {
@@ -32,22 +32,22 @@ export default function TodoList() {
   
   const onMoveUp = (index) => {
     const tasks = state.tasks ?? [];
-    if(index<=0||index>=tasks.length) {
+    if (index <= 0 || index >= tasks.length) {
       return;
     }
     const self = tasks.splice(index, 1)[0]; // remove
     tasks.splice(index-1, 0, self); // insert
-    setState({ ...state, tasks: tasks });
+    setState({ ...state, tasks });
   }
 
   const onMoveDown = (index)=>{
     const tasks = state.tasks ?? [];
-    if(index<0||index>=tasks.length-1) {
+    if (index < 0 || index >= tasks.length - 1) {
       return;
     }
     const self = tasks.splice(index, 1)[0]; // remove
     tasks.splice(index+1, 0, self); // insert
-    setState({ ...state, tasks: tasks });
+    setState({ ...state, tasks });
   }
 
   return (<>
@@ -63,8 +63,8 @@ export default function TodoList() {
         {state.tasks.map((t,index) => { 
           return <li key={index}>
             <span>{t}</span>
-            <button className={'add-btn'} onClick={() => { onMoveUp(index) }}>up</button>
-            <button className={'add-btn'} onClick={() => { onMoveDown(index) }}>down</button>
+            <button className={'move-up-btn'} onClick={() => { onMoveUp(index) }}>up</button>
+            <button className={'move-down-btn'} onClick={() => { onMoveDown(index) }}>down</button>
             <button className={'del-btn'} onClick={() => { onDeleteTask(index) }}>delete</button>
           </li>
         })}
@@ -72,7 +72,9 @@ export default function TodoList() {
         {
           !state.tasks?.length && <li className={'no-task'}><span>Empty</span></li>
         }
-        </ul>
+      </ul>
+
+      <div style={{ color: 'red' }}> accept prop: { msg }</div>
 
     </div>
     </> 

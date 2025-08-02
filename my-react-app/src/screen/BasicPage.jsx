@@ -1,6 +1,7 @@
 import React, {createRef, createState, useRef, useState, useEffect} from 'react'; //加了这一行，在低版本react15中，返回值才会被Babel转换成React.CreateElement。
 import MyTool from './MyTool';
 import TodoList from '../components/todolist/TodoList';
+import TodoListWithReducer from '../components/todolist/TodoListWithReducer';
 
 
 function BasicPage() {
@@ -37,6 +38,7 @@ function BasicPage() {
    
     ///////////(3)props
     //props are passed from parent to child, so no need to define here.
+    const msg = "print props";
 
     return (<>
         <h6>Hello~ This is function comp.</h6> 
@@ -48,10 +50,12 @@ function BasicPage() {
         }} />
         <MyTool ref={myToolRef}></MyTool>
 
-        <TodoList></TodoList>
+        <TodoList msg={msg}></TodoList>
 
         <input type={pwdState.type} />
         <button onClick={onToggleDisplayPwd}>{pwdState.tips}</button>
+
+        <TodoListWithReducer></TodoListWithReducer>
         </>
     ) //will be converted by Babel to React.CreateElement() when it's lower version.
 }
