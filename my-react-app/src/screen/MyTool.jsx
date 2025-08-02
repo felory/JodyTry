@@ -1,4 +1,6 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, use } from 'react'
+import { useContext } from 'react';
+import { LevelContext } from '../LevelContext.js';
 
 // function MyTool() {
 //   return (
@@ -7,6 +9,8 @@ import React, { forwardRef } from 'react'
 // }
 
 const MyTool = forwardRef((props, ref) => {
+  const level = useContext(LevelContext);
+  console.log("in MyTool, LevelContext:", level);
   return <div ref={ref}>MyTool内容</div>;
 });
 

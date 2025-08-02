@@ -3,8 +3,10 @@ import MyTool from './MyTool';
 import TodoList from '../components/todolist/TodoList';
 import TodoListWithReducer from '../components/todolist/TodoListWithReducer';
 
+import { useContext } from 'react';
+import { LevelContext } from '../LevelContext.js';
 
-function BasicPage() {
+function BasicPage({ level }) {
     ////////////(1)ref bind to DOM or CompInstance
     const inputBoxRef = createRef(); //bind to DOM
     const myToolRef = useRef();  //bind to CompInstance
@@ -40,7 +42,12 @@ function BasicPage() {
     //props are passed from parent to child, so no need to define here.
     const msg = "print props";
 
-    return (<>
+
+    ////////////(4)useContext
+    // const level = useContext(LevelContext);
+    // console.log("in BasicPage, LevelContext:", level);
+
+    return (<LevelContext value={level+1}>
         <h6>Hello~ This is function comp.</h6> 
         <button onClick={onLogNow}>Print Log</button>
 
@@ -56,7 +63,7 @@ function BasicPage() {
         <button onClick={onToggleDisplayPwd}>{pwdState.tips}</button>
 
         <TodoListWithReducer></TodoListWithReducer>
-        </>
+        </LevelContext>
     ) //will be converted by Babel to React.CreateElement() when it's lower version.
 }
 

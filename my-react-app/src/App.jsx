@@ -1,4 +1,4 @@
-import { useState, createRef } from 'react'
+import { useState, createRef, useContext } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -6,6 +6,7 @@ import Home from './screen/Home';
 import BasicPage from './screen/BasicPage';
 import Header from './screen/Header';
 import Footer from './screen/Footer';
+import { LevelContext } from './LevelContext';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,10 +29,10 @@ function App() {
   return (
     <>
       
-      <Header></Header>
-      <BasicPage></BasicPage>
+      <Header level={1}></Header>
+      <BasicPage level={1}></BasicPage>
       {/* <Home ref={homeCompInstanceRef} msg={msg}></Home> */}
-      <Footer></Footer>
+      <Footer level={1}></Footer>
       
       
       <h1>Vite + React</h1>
