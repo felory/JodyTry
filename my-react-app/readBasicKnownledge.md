@@ -181,11 +181,11 @@ function handleAddTask(text) {
 context使组件向其下方的整个树提供信息。
 可以用它来传递整个子树需要的任何信息：当前的颜色主题、当前登录的用户、保存当前活动的路由。
 
-1.导出全局context：
+1.新建一个aaa.context.js文件，导出全局context：
 import { createContext } from 'react';
 export const LevelContext = createContext(0);
 
-2.包裹到context provider里，指定可消费范围：
+2.在父组件中，把消费范围，包裹到context provider里：
 `
 import { useContext } from 'react';
 import { LevelContext } from './LevelContext.js';
@@ -194,7 +194,7 @@ export default function Section({ children }) {
   const level = useContext(LevelContext);
   return (
     <section className="section">
-      <LevelContext value={level + 1}>
+      <LevelContext value={level + 1}>  //////here
         {children}
       </LevelContext>
     </section>
