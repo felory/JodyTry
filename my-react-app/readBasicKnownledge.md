@@ -62,9 +62,18 @@ startTransition(() => { setFilter(input); }); // 延迟更新搜索过滤
 ===》
 div冒泡到root，发送到合成事件层（实例化成统一的react event），从映射表里找到事件处理函数，分派给它。
 当一个组件挂载/卸载，相应的事件处理函数会在映射表中 添加/删除。
-================================
+===============================================================
+===============================================================
+===============================================================
 # 三大属性监听数据变化 ref(与渲染无关，持久化存储), state（触发重新渲染的状态）, props 
 (1)ref绑定到【DOM节点】，ref.current可以拿DOM元素对象。
+让组件记住一些信息，但又不触发新的渲染！！！
+单向数据流的脱围机制。
+const r = useRef(123); //返回对象{current: 123};
+
+
+
+
 ///////需要直接访问或操作DOM节点（如聚焦输入框、测量元素尺寸），但操作本身不应触发重新渲染
  const inputRef = createRef();
 
@@ -92,7 +101,8 @@ const myToolRef = createrRef();
 <TodoList msg={msg}></TodoList>
 export default function TodoList({ msg }) { }
 
-====================== 
+================================================================ 
+==================================================
 # Hook: 以 use 开头的函数。//只能在组件或自定义 Hook 的最顶层调用
 Hook 是特殊的函数，只在 React 渲染时有效。
 const [val, setVal] = useState(initVal);
@@ -176,8 +186,21 @@ function handleAddTask(text) {
     });
   }
 
+==============
+const [state,dispatch] = useReducer(reducerFn,initState);
+useReducer的实质是：
+function useReducer(reducerFn, initState){
+  const [state, setState] = useState();
 
+  function dispatch(action){
+    const newState = reducerFn(state, action);
+    setState(newState);
+  }
+
+  return [state, dispatch];
+}
 ============================================================
+========================================================
 context使组件向其下方的整个树提供信息。
 可以用它来传递整个子树需要的任何信息：当前的颜色主题、当前登录的用户、保存当前活动的路由。
 
@@ -244,4 +267,72 @@ ref.current
 
 
 ## 插槽，复用但避免不必要的通信。
+
+
+
+# react中有两种逻辑：1.渲染代码，纯粹的计算jsx（props+state） 2.事件处理程序(用户操作 + 引起副作用改变了程序状态) 
+## 不由特定事件引起，而是由渲染本身引起的副作用（如建立服务器连接）。Effect通常在 提交结束后、页面更新后运行，此时正是react与外部系统同步的最佳时机。
+Effect 只能做两件事：开始同步某些东西，然后停止同步它
+### 走出react，连接外部系统（网络/第三方库）：
+1.用浏览器API聚焦输入框。
+2.在没有react情况下，实现视频播放器。
+3.连接+监听远程服务器的消息。
+========
+1.使用ref来记住组件内的信息（如timeoutID， DOM元素），但是不触发新的渲染。////ref.current = ref.current + 1;
+////react会自动更新DOM，但是有时需要操作DOM如：
+聚焦节点（ 
+const inputRef = useRef(null);
+function handleClick() {
+  inputRef.current.focus();
+}
+ <input ref={inputRef} />
+    <button onClick={handleClick}>
+）、
+滚动到此节点，
+以及测量它的尺寸和位置
+
+2.使用Effect与外部系统同步，如
+function VideoPlayer({ src, isPlaying }) {
+  const ref = useRef(null);
+
+  useEffect(() => { //isPlaying来自props
+    if (isPlaying) {
+      ref.current.play(); //不要试图在渲染期间对 DOM 节点进行操作，所以要放在useEffect钩子里。
+    } else {
+      ref.current.pause();
+    }
+  }, [isPlaying]);
+  
+  return <video ref={ref} src={src} loop playsInline />;
+
+#### write an effect， 当组件渲染时，react会先更新页面，再运行useEffect里的代码。===》useEffect 会“延迟”一段代码的运行，直到渲染结果反映在页面上。
+
+1.声明effect
+import { useEffect } from 'react';
+##### ///不要在effect中更新state，因为这会导致重新渲染，从而导致又再次触发effect，这样陷入死循环。==》Effect 应该用于将你的组件与一个 外部 的系统保持同步
+2.指定effect依赖
+ useEffect(() => {
+    if (isPlaying) { // isPlaying 在此处使用……
+      // ...
+    } else {
+      // ...
+    }
+  }, [isPlaying]);///==》传入依赖数组，只有当这些值发生变化时，才重新执行我这个effect，跳过不必要的重新运行effect。
+==========
+​（1）​依赖数组包含effect中用到的所有会变化的值​​（props、state等）。
+  不用传递ref，因为ref 具有 稳定 的标识：React 确保你在 每轮渲染中调用同一个 useRef 时，总能获得相同的对象。但是如果是父组件传递来的ref则需要依赖。
+  useState 返回的 set 函数 也具有稳定的标识。
+  React 使用 Object.is 来比较依赖项的值。
+（2）空数组[]表示effect只在组件挂载时运行一次。
+（3）不传依赖数组，表示每次渲染后都运行。
+
+3.必要时，添加清理
+  useEffect(() => {
+    const connection = createConnection();
+    connection.connect();
+    return () => { /////返回一个cleanup函数，自行清理。在组件卸载（被移除）时最后一次调用。
+      connection.disconnect();
+    };
+  }, []);
+
 
