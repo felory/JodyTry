@@ -6,6 +6,9 @@ import TodoListWithReducer from '../components/todolist/TodoListWithReducer';
 import { useContext } from 'react';
 import { LevelContext } from '../LevelContext.js';
 
+import SearchBox from '../components/SearchBox.jsx';
+import LongList from '../components/LongList.jsx';
+
 function BasicPage({ level }) {
     ////////////(1)ref bind to DOM or CompInstance
     const inputBoxRef = createRef(); //bind to DOM
@@ -63,6 +66,8 @@ function BasicPage({ level }) {
         <button onClick={onToggleDisplayPwd}>{pwdState.tips}</button>
 
         <TodoListWithReducer></TodoListWithReducer>
+        <SearchBox></SearchBox>
+        <LongList></LongList>
         </LevelContext>
     ) //will be converted by Babel to React.CreateElement() when it's lower version.
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import './todolist.css'
 
 export default function TodoList({ msg }) {
@@ -49,6 +49,23 @@ export default function TodoList({ msg }) {
     tasks.splice(index+1, 0, self); // insert
     setState({ ...state, tasks });
   }
+
+  const todos = state.tasks ?? [];
+  const tab = 'all'; // This could be a state or prop to filter tasks
+  const visibleTodos = useMemo(() => {
+    const filteredTodos = todos.filter(todo => {
+      switch (tab) {
+        case 'all':
+          return true;
+        case 'active':
+          return !todo.completed;
+        case 'completed':
+          return todo.completed;
+      }
+      return false;
+    });
+    return filteredTodos;
+  }, [todos, tab]);
 
   return (<>
     <div className={'todo-list'}>
