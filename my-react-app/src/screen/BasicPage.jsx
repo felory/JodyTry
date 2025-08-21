@@ -50,6 +50,9 @@ function BasicPage({ level }) {
     // const level = useContext(LevelContext);
     // console.log("in BasicPage, LevelContext:", level);
 
+    /////usememo usecallback
+    
+
     return (<LevelContext value={level+1}>
         <h6>Hello~ This is function comp.</h6> 
         <button onClick={onLogNow}>Print Log</button>

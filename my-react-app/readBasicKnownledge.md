@@ -336,16 +336,29 @@ import { useEffect } from 'react';
   }, []);
 
 
-
-================================
-================================
-useMemo每次重新渲染时，缓存计算的结果。
-const cachedValue = useMemo(calcFn, dependencies);
-
-
-==============
+====================================
+====================================
 # react1引入严格模式，在开发环境下，会故意让组件渲染2次，目的是为了帮助开发者发现潜在的副作用。
 而生产环境会自动关闭，不会出现双重渲染。
 
-# useCallback
+====================================
+====================================
+# useMemo useCallback
+//useMemo每次重新渲染时，缓存计算的结果，跳过昂贵的计算。
+//const cachedValue = useMemo(calcFn, dependencies);
+const cachedArr = useMemo(()=>{return [1,2,3]},[]);
+
+//React.memo 如果传递给子组件的props没有改变，那么即使父组件重新渲染，子组件还是不重新渲染。
+const Child = memeo((props)=>{return <h2>child...</h2>})
+
+//useCallback 跳过组件的重新渲染
+const fn1 = useCallback(()=>{},[]);
+
+function Parent(){
+  return <>
+    <Child arr={cachedArr} fn1={fn1}></Child>
+  </>
+}
+
+
 
